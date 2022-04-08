@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Assignment Calculator</title>
+    <script src="JQuery.js"></script>
+    <style>
+        body {
+            background: #fff none repeat scroll 0 0 !important;
+            color: #000;
+            line-height: 15px;
+            margin: 0;
+            font-size: 13px !important;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: Calibri !important;
+        }
+
+        @media only screen and (max-width: 5668px) {
+            .divclass {
+                width: 26%;
+                font-family: Calibri;
+                letter-spacing: 0.4px;
+                margin: 5% 37%;
+                background: #fdfdfd;
+                min-height: 320px;
+                padding: 10px;
+                border-radius: 13px;
+                box-shadow: 1px 2px 3px 4px #ddd;
+            }
+        }
+
+
+
+        @media only screen and (max-width: 768px) {
+            .divclass {
+                width: 80%;
+                font-family: Calibri;
+                letter-spacing: 0.4px;
+                margin: 5% 10%;
+                background: #fdfdfd;
+                min-height: 320px;
+                padding: 10px;
+                border-radius: 13px;
+                box-shadow: 1px 2px 3px 4px #ddd;
+            }
+        }
+
+        .buttondatatbl {
+            width: 100%;
+        }
+
+            .buttondatatbl td {
+                padding: 5px;
+                text-align: right;
+            }
+
+            .buttondatatbl tr td:first-child {
+                padding: 5px;
+                text-align: left;
+            }
+
+
+        .btndata {
+            background: #fff;
+            padding: 8px 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            height: 35px;
+            margin: 25px auto;
+            box-shadow: 1px 2px 3px 4px #eee;
+        }
+
+            .btndata:hover {
+                background: #dbfffe;
+            }
+
+        .equall {
+            background: #518eed;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#txtvalue').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+            });
+        });
+
+        function caldata() {
+            var value1 = document.getElementById("txtvalue1").value;
+            var value2 = document.getElementById("txtvalue2").value;
+            var CType = document.getElementById("ddlType").value;
+
+            if (value1 != "" && value2 != "" && CType != "") {
+
+                var Calculation = {Value1: value1, Value2: value2, Type: CType };
+                $.ajax({
+                    type: "POST",
+                    url: "/api/Home",
+                    data: JSON.stringify(Calculation),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: onsuccessdatacal,
+                    failure: function (resdata) {
+                        document.getElementById("txtvalue").value = "0";
+                    },
+                    error: function (data) {
+                        document.getElementById("txtvalue").value = "0";
+                    }
+                });
+            }
+            else {
+                alert("Please enter Value 1 , Value 2 and Calculation Type.");
+            }
+
+        }
+
+        function onsuccessdatacal(responsedata) {
+            data = responsedata[0];
+            if (data != "") {
+                document.getElementById("txtvalue").value = data;
+            }
+            else {
+                document.getElementById("txtvalue").value = "0";
+            }
+        }
+
+        function Validate(event) {
+            var regex = new RegExp("^[0-9-+*/]");
+            var key = String.fromCharCode(event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="divclass">
+        <p style="text-align: center; font-weight: 600; font-size: 18px; margin-top: 5px; padding: 10px; color: #000;">
+            My Calculator
+        </p>
+        <br />
+        <br />
+        <table class="buttondatatbl">
+            <tr>
+                <td>Number 1</td>
+                <td><input id="txtvalue1" value="0" type="number" onkeypress="return Validate(event);" style="width: 86%; height: 30px; margin-left: 5%; font-size: 20px; font-weight: 600; text-align: right; padding: 4px; font-size: 13px;" /></td>
+            </tr>
+            <tr>
+                <td>Number 2</td>
+                <td><input id="txtvalue2" value="0" type="number" onkeypress="return Validate(event);" style="width: 86%; height: 30px; margin-left: 5%; font-size: 20px; font-weight: 600; text-align: right; padding: 4px; font-size: 13px;" /></td>
+            </tr>
+            <tr>
+                <td>Calculation Type</td>
+                <td>
+                    <select id="ddlType" style="width: 92%; height: 30px; margin-left: 5%; font-size: 20px; font-weight: 500; padding: 4px; font-size: 13px;">
+                        <option value="">Select Type</option>
+                        <option value="ADD">Addition</option>
+                        <option value="SUB">Subtraction</option>
+                        <option value="MUL">Multiplication</option>
+                        <option value="DIV">Division</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Result</td>
+                <td><input id="txtvalue" value="0" type="text" readonly="readonly" style="width: 86%; height: 30px; margin-left: 5%; font-size: 20px; font-weight: 600; text-align: right; padding: 4px; font-size: 16px;" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <button class="btndata" onclick="caldata();">Calculate</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <hr />
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <p style="text-align: center; font-weight: 600; font-size: 15px; margin-top: 5px; padding: 10px; background: #8f68fb; color: #fff;">
+                       Last History
+                    </p>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+</body>
+</html>

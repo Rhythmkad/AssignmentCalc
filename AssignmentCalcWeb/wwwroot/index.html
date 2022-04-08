@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sandeep Calculator</title>
+    <script src="JQuery.js"></script>
+    <style>
+        body {
+            background: #fff none repeat scroll 0 0 !important;
+            color: #000;
+            line-height: 15px;
+            margin: 0;
+            font-size: 13px !important;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: Calibri !important;
+        }
+
+        @media only screen and (max-width: 5668px) {
+            .divclass {
+                width: 26%;
+                font-family: Calibri;
+                letter-spacing: 0.4px;
+                margin: 5% 37%;
+                background: #fdfdfd;
+                min-height: 320px;
+                padding: 10px;
+                border-radius: 13px;
+                box-shadow: 1px 2px 3px 4px #ddd;
+            }
+        }
+
+
+
+        @media only screen and (max-width: 768px) {
+            .divclass {
+                width: 80%;
+                font-family: Calibri;
+                letter-spacing: 0.4px;
+                margin: 5% 10%;
+                background: #fdfdfd;
+                min-height: 320px;
+                padding: 10px;
+                border-radius: 13px;
+                box-shadow: 1px 2px 3px 4px #ddd;
+            }
+        }
+
+        .buttondatatbl {
+            width: 100%;
+        }
+
+            .buttondatatbl td {
+                padding: 5px;
+                text-align: center;
+            }
+
+
+        .btndata {
+            background: #fff;
+            padding: 5px;
+            font-size: 24px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            height: 50px;
+            width: 50px;
+            margin: 0 auto;
+            box-shadow: 1px 2px 3px 4px #eee;
+        }
+
+            .btndata:hover {
+                background: #dbfffe;
+            }
+
+        .equall {
+            background: #518eed;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#txtvalue').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+            });
+        });
+        var data = "";
+
+        function caldata(mydata) {
+
+            if (mydata == "/") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == "*") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == "+") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == "-") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == "%") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == ".") {
+                data = data + mydata;
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else if (mydata == "=") {
+                var Calculation = { CData: data };
+                $.ajax({
+                    type: "POST",
+                    url: "/api/Home",
+                    data: JSON.stringify(Calculation),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: onsuccessdatacal,
+                    failure: function (resdata) {
+                        alert(data.responseText);
+                    },
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
+                });
+            }
+            else if (mydata == "clr") {
+                data = "";
+                sumdata = "0";
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+            else {
+                data = data + "" + parseInt(mydata)
+                if (data != "") {
+                    document.getElementById("txtvalue").value = data;
+                }
+                else {
+                    document.getElementById("txtvalue").value = "0";
+                }
+            }
+        }
+
+        function onsuccessdatacal(responsedata) {
+            data = responsedata[0];
+            if (data != "") {
+                document.getElementById("txtvalue").value = data;
+            }
+            else {
+                document.getElementById("txtvalue").value = "0";
+            }
+        }
+
+        function Validate(event) {
+            var regex = new RegExp("^[0-9-+*/]");
+            var key = String.fromCharCode(event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        }
+
+        function validatedata() {
+            data = document.getElementById("txtvalue").value;
+        }
+    </script>
+</head>
+<body>
+    <div class="divclass">
+        <p style="text-align: center; font-weight: 600; font-size: 18px; margin-top: 5px; padding: 10px; background: #8f68fb; color: #fff;">
+            Sandeep Kour Calculator
+        </p>
+        <br />
+        <br />
+        <input id="txtvalue" value="0" type="text" onkeypress="return Validate(event);" onchange="validatedata();" style="width: 86%; height: 34px; margin-left: 5%; font-size: 20px; font-weight: 600; text-align: right; padding: 4px; font-size: 16px;" />
+        <br />
+        <br />
+        <table class="buttondatatbl">
+            <tr>
+                <td>
+                    <button class="btndata" onclick="caldata('1');" accesskey="1">1</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('2');" accesskey="2">2</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('3');" accesskey="3">3</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('/');" accesskey="4">/</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btndata" onclick="caldata('4');" accesskey="4">4</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('5');" accesskey="5">5</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('6');" accesskey="6">6</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('*');" accesskey="*">X</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btndata" onclick="caldata('7');" accesskey="7">7</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('8');" accesskey="8">8</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('9');" accesskey="9">9</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('+');" accesskey="+">+</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btndata" onclick="caldata('0');" accesskey="0">0</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('-');" accesskey="-">-</button>
+                </td>
+                <td>
+                    <button class="btndata" onclick="caldata('clr');" accesskey="c">clr</button>
+                </td>
+                <td>
+                    <button class="btndata equall" onclick="caldata('=');" accesskey="=">=</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</body>
+</html>
