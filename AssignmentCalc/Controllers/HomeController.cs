@@ -25,9 +25,7 @@ namespace AssignmentCalc.Controllers
                 String RData = "0";
                 if (Type.Trim().ToUpper() == "ADD")
                 {
-
                     RData = Convert.ToString(objCalculator.Add(Convert.ToInt32(Value1.Trim()), Convert.ToInt32(Value2.Trim())));
-
                 }
                 else if (Type.Trim() == "SUB")
                 {
